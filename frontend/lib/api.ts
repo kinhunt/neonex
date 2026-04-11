@@ -1,5 +1,5 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://backend-production-209e.up.railway.app";
-const ENGINE_BASE = process.env.NEXT_PUBLIC_ENGINE_BASE || "https://engine-production-9b1c.up.railway.app";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3100";
+const ENGINE_BASE = process.env.NEXT_PUBLIC_ENGINE_BASE || "http://localhost:3200";
 
 // ─── Token Management ──────────────────────────────────────────
 const TOKEN_KEY = "bs_auth_token";

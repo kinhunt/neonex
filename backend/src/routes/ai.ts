@@ -7,8 +7,8 @@ const PYTHON_ENGINE_URL = process.env.PYTHON_ENGINE_URL || 'http://localhost:320
 const AI_MODEL = process.env.AI_MODEL || 'claude-sonnet-4-20250514';
 
 const openai = new OpenAI({
-  baseURL: 'https://cliproxy.exe.xyz/v1',
-  apiKey: 'sk-uQLEU2nj1uEYU0zbv',
+  baseURL: process.env.OPENAI_BASE_URL || 'https://cliproxy.exe.xyz/v1',
+  apiKey: process.env.OPENAI_API_KEY || '',
   timeout: 30000,
 });
 

@@ -47,7 +47,7 @@ npx tsx src/seed.ts
 npm run dev          # listens on http://localhost:3100
 ```
 
-Environment variables (defaults work for local dev):
+Environment variables (defaults work for local dev; see `backend/.env.example`):
 
 | Variable | Default | Description |
 |---|---|---|
@@ -55,6 +55,9 @@ Environment variables (defaults work for local dev):
 | `DB_PATH` | `./data/strategies.db` | SQLite database path |
 | `JWT_SECRET` | `blacksquirrel-dev-secret` | JWT signing key |
 | `PYTHON_ENGINE_URL` | `http://localhost:3200` | Engine service URL |
+| `AI_MODEL` | `claude-sonnet-4-20250514` | Model name used by the AI endpoints |
+| `OPENAI_BASE_URL` | `https://cliproxy.exe.xyz/v1` | OpenAI-compatible proxy base URL |
+| `OPENAI_API_KEY` | _empty_ | API key for AI endpoints |
 
 ### 2. Engine
 
@@ -73,12 +76,12 @@ npm install
 npm run dev          # listens on http://localhost:3000
 ```
 
-Environment variables (set before `npm run build` for production):
+Environment variables (see `frontend/.env.example`):
 
 | Variable | Default | Description |
 |---|---|---|
-| `NEXT_PUBLIC_API_BASE` | Railway production URL | Backend API base |
-| `NEXT_PUBLIC_ENGINE_BASE` | Railway production URL | Engine API base |
+| `NEXT_PUBLIC_API_BASE` | `http://localhost:3100` | Backend API base |
+| `NEXT_PUBLIC_ENGINE_BASE` | `http://localhost:3200` | Engine API base |
 
 For local development, point these at `http://localhost:3100` and `http://localhost:3200` respectively, or update `frontend/lib/api.ts`.
 
@@ -97,4 +100,12 @@ Authentication uses EIP-4361 (SIWE) with JWT sessions. The backend proxies backt
 
 ## Deployment
 
-This codebase was exported from a Railway deployment. Each service has its own `Dockerfile` and `railway.toml`. See [`docs/RAILWAY_DEPLOYMENT.md`](docs/RAILWAY_DEPLOYMENT.md) for details.
+This codebase was exported from a Railway deployment and then normalized so each service directory can be deployed independently.
+
+Recommended Railway service roots:
+
+- `backend/`
+- `frontend/`
+- `engine/`
+
+Each service now has a self-contained Docker build, and the frontend also includes a minimal `railway.toml`. See [`docs/RAILWAY_DEPLOYMENT.md`](docs/RAILWAY_DEPLOYMENT.md) for details.

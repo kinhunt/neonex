@@ -2,13 +2,13 @@ FROM node:20-slim
 
 WORKDIR /app
 
-COPY layer1-strategy-market/frontend/package*.json ./
+COPY package*.json ./
 RUN npm ci
 
-COPY layer1-strategy-market/frontend/ .
+COPY . .
 
-ARG NEXT_PUBLIC_API_BASE
-ARG NEXT_PUBLIC_ENGINE_BASE
+ARG NEXT_PUBLIC_API_BASE=http://localhost:3100
+ARG NEXT_PUBLIC_ENGINE_BASE=http://localhost:3200
 ENV NEXT_PUBLIC_API_BASE=${NEXT_PUBLIC_API_BASE}
 ENV NEXT_PUBLIC_ENGINE_BASE=${NEXT_PUBLIC_ENGINE_BASE}
 
