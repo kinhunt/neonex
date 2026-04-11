@@ -1,0 +1,8 @@
+fastapi==0.104.1
+uvicorn==0.24.0
+backtesting==0.3.3
+ta==0.11.0
+ccxt==4.1.22
+pandas==2.1.4
+numpy==1.26.2
+bokeh==2.4.3
