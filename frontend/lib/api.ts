@@ -73,10 +73,9 @@ export interface Strategy {
   version: string;
   tags: string[];
   code: string;
-  fork_count: number;
-  forked_from?: string;
-  created_at: string;
-  updated_at: string;
+  forkFromId?: string;
+  createdAt: string;
+  updatedAt: string;
   authorName?: string;
   robustnessScore?: number;
   currentVersionId?: string;
@@ -84,12 +83,14 @@ export interface Strategy {
   versions?: StrategyVersion[];
   configurations?: Configuration[];
   performance?: {
-    total_return: number;
-    sharpe_ratio: number;
-    max_drawdown: number;
-    win_rate: number;
-    total_trades: number;
-  };
+    totalReturn: number;
+    sharpeRatio: number;
+    maxDrawdown: number;
+    winRate: number;
+    totalTrades: number;
+    symbol?: string;
+    timeframe?: string;
+  } | null;
   backtest?: {
     totalReturn: number;
     sharpeRatio: number;
@@ -288,10 +289,11 @@ export async function runBacktest(
   return data;
 }
 
-export async function forkStrategy(id: string): Promise<Strategy> {
+export async function forkStrategy(id: string, code: string): Promise<Strategy> {
   const res = await fetch(`${API_BASE}/api/strategies/${id}/fork`, {
     method: "POST",
-    headers: { ...authHeaders() },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify({ code }),
   });
   if (!res.ok) throw new Error("Failed to fork strategy");
   const data = await res.json();

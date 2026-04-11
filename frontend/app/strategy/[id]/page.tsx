@@ -87,9 +87,15 @@ export default function StrategyDetailPage() {
       alert("Please connect your wallet to fork.");
       return;
     }
+    if (!strategy) return;
+    const code = strategy.currentVersion?.code || strategy.code || "";
+    if (!code) {
+      alert("Strategy has no code to fork.");
+      return;
+    }
     setForking(true);
     try {
-      const forked = await forkStrategy(id);
+      const forked = await forkStrategy(id, code);
       router.push(`/strategy/${forked.id}`);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Fork failed";
@@ -97,7 +103,7 @@ export default function StrategyDetailPage() {
     } finally {
       setForking(false);
     }
-  }, [id, router, isLoggedIn]);
+  }, [id, router, isLoggedIn, strategy]);
 
   if (loading) {
     return (

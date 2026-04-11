@@ -446,13 +446,10 @@ router.post('/:id/fork', requireAuth, (req: Request, res: Response) => {
 
     const { name, description, code, tags } = req.body;
 
-    // Fork 必须修改代码
-    if (!code) {
-      return res.status(400).json({ error: 'code is required — Fork must include code changes' });
-    }
-
-    if (original.currentCode && code.trim() === original.currentCode.trim()) {
-      return res.status(400).json({ error: 'Fork must include code changes (code is identical to original)' });
+    // Use provided code or copy original (standard fork behavior)
+    const forkCode = code || original.currentCode;
+    if (!forkCode) {
+      return res.status(400).json({ error: 'Original strategy has no code to fork' });
     }
 
     const newStrategyId = uuidv4();
@@ -477,14 +474,14 @@ router.post('/:id/fork', requireAuth, (req: Request, res: Response) => {
     db.prepare(`
       INSERT INTO strategy_versions (id, strategyId, version, code, changelog)
       VALUES (?, ?, ?, ?, ?)
-    `).run(newVersionId, newStrategyId, 'v1', code, `Forked from ${original.name}`);
+    `).run(newVersionId, newStrategyId, 'v1', forkCode, `Forked from ${original.name}`);
 
     res.status(201).json({
       id: newStrategyId,
       name: name || `${original.name} (Fork)`,
       forkFromId: original.id,
       currentVersionId: newVersionId,
-      code,
+      code: forkCode,
       createdAt: new Date().toISOString(),
     });
   } catch (err: any) {

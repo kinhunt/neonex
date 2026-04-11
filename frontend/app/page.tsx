@@ -76,17 +76,17 @@ export default function HomePage() {
       const bb = b.backtest;
 
       if (sortBy === "sharpe") {
-        const sa = ca?.sharpeRatio ?? ba?.sharpeRatio ?? pa?.sharpe_ratio ?? -999;
-        const sb = cb?.sharpeRatio ?? bb?.sharpeRatio ?? pb?.sharpe_ratio ?? -999;
+        const sa = ca?.sharpeRatio ?? ba?.sharpeRatio ?? pa?.sharpeRatio ?? -999;
+        const sb = cb?.sharpeRatio ?? bb?.sharpeRatio ?? pb?.sharpeRatio ?? -999;
         return sb - sa;
       }
       if (sortBy === "return") {
-        const ra = ca?.totalReturn ?? ba?.totalReturn ?? pa?.total_return ?? -999;
-        const rb = cb?.totalReturn ?? bb?.totalReturn ?? pb?.total_return ?? -999;
+        const ra = ca?.totalReturn ?? ba?.totalReturn ?? pa?.totalReturn ?? -999;
+        const rb = cb?.totalReturn ?? bb?.totalReturn ?? pb?.totalReturn ?? -999;
         return rb - ra;
       }
       // created
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
 
     return list;
@@ -212,10 +212,10 @@ function StrategyCard({
   const bt = strategy.backtest;
   const perf = strategy.performance;
 
-  const totalReturn = config?.totalReturn ?? bt?.totalReturn ?? perf?.total_return ?? 0;
-  const sharpeRatio = config?.sharpeRatio ?? bt?.sharpeRatio ?? perf?.sharpe_ratio;
-  const maxDrawdown = config?.maxDrawdown ?? perf?.max_drawdown;
-  const winRate = config?.winRate ?? bt?.winRate ?? perf?.win_rate;
+  const totalReturn = config?.totalReturn ?? bt?.totalReturn ?? perf?.totalReturn ?? 0;
+  const sharpeRatio = config?.sharpeRatio ?? bt?.sharpeRatio ?? perf?.sharpeRatio;
+  const maxDrawdown = config?.maxDrawdown ?? perf?.maxDrawdown;
+  const winRate = config?.winRate ?? bt?.winRate ?? perf?.winRate;
   const isPositive = totalReturn >= 0;
   const authorName = getAuthorName(strategy);
 
@@ -274,7 +274,7 @@ function StrategyCard({
         </div>
         <div className="flex justify-between">
           <span className="text-bs-muted">Trades</span>
-          <span className="font-medium">{config?.totalTrades ?? perf?.total_trades ?? "—"}</span>
+          <span className="font-medium">{config?.totalTrades ?? perf?.totalTrades ?? "—"}</span>
         </div>
       </div>
 
