@@ -9,7 +9,7 @@ const AI_MODEL = process.env.AI_MODEL || 'claude-sonnet-4-20250514';
 const openai = new OpenAI({
   baseURL: process.env.OPENAI_BASE_URL || 'https://cliproxy.exe.xyz/v1',
   apiKey: process.env.OPENAI_API_KEY || '',
-  timeout: 30000,
+  timeout: Number(process.env.AI_TIMEOUT_MS || 120000),
 });
 
 const STRATEGY_SYSTEM_PROMPT = `You are an expert quantitative strategy developer. You write Python trading strategies using the backtesting.py library.
@@ -218,8 +218,8 @@ router.post('/explain-strategy', async (req: Request, res: Response) => {
           content: `请解释以下交易策略的逻辑：\n\n\`\`\`python\n${code}\n\`\`\``,
         },
       ],
-      temperature: 0.3,
-      max_tokens: 2048,
+      temperature: 0.2,
+      max_tokens: 1200,
     });
 
     const explanation = completion.choices[0]?.message?.content || '';
