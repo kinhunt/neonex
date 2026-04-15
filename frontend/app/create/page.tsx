@@ -39,6 +39,13 @@ const OptimizerPanel = dynamic(() => import("@/components/OptimizerPanel"), {
   ),
 });
 
+const StrategyExplanation = dynamic(() => import("@/components/StrategyExplanation"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[220px] bs-skeleton rounded-lg" />
+  ),
+});
+
 export default function CreateStrategyPage() {
   const router = useRouter();
   const { isLoggedIn } = useAuth();
@@ -397,19 +404,11 @@ export default function CreateStrategyPage() {
 
           {/* Strategy Explanation */}
           {explanation && !showOptimizer && (
-            <div className="border-t border-bs-border bg-bs-card px-4 py-4 max-h-[35vh] overflow-y-auto">
-              <div className="flex items-center justify-between gap-3 mb-2">
-                <h3 className="text-sm font-semibold">🧠 Strategy Explanation</h3>
-                <button
-                  onClick={() => setExplanation("")}
-                  className="text-xs text-bs-muted hover:text-white transition-colors"
-                >
-                  Hide
-                </button>
-              </div>
-              <div className="text-sm text-bs-muted whitespace-pre-wrap leading-6">
-                {explanation}
-              </div>
+            <div className="border-t border-bs-border bg-bs-card px-4 py-4 max-h-[42vh] overflow-y-auto">
+              <StrategyExplanation
+                explanation={explanation}
+                onHide={() => setExplanation("")}
+              />
             </div>
           )}
 

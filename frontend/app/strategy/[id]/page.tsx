@@ -33,6 +33,13 @@ const EquityChart = dynamic(() => import("@/components/EquityChart"), {
   ),
 });
 
+const StrategyExplanation = dynamic(() => import("@/components/StrategyExplanation"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[220px] bs-skeleton rounded-lg" />
+  ),
+});
+
 type Tab = "performance" | "parameters" | "code";
 
 export default function StrategyDetailPage() {
@@ -650,20 +657,10 @@ function CodeTab({
       </div>
 
       {explanation && (
-        <div className="bg-bs-card border border-bs-border rounded-xl p-4">
-          <div className="flex items-center justify-between gap-3 mb-2">
-            <h3 className="text-lg font-semibold">🧠 Strategy Explanation</h3>
-            <button
-              onClick={() => setExplanation("")}
-              className="text-xs text-bs-muted hover:text-white transition-colors"
-            >
-              Hide
-            </button>
-          </div>
-          <div className="text-sm text-bs-muted whitespace-pre-wrap leading-6">
-            {explanation}
-          </div>
-        </div>
+        <StrategyExplanation
+          explanation={explanation}
+          onHide={() => setExplanation("")}
+        />
       )}
 
       {/* Version History */}
