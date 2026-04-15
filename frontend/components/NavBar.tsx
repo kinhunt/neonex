@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { truncateAddress } from "@/lib/api";
@@ -59,10 +60,25 @@ export function NavBar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
         <a
           href="/"
-          className="flex items-center gap-2 text-lg font-bold hover:text-bs-green transition-colors"
+          className="flex items-center gap-3 hover:opacity-90 transition-opacity"
+          aria-label="Neonex home"
         >
-          <span className="hidden sm:inline">Neonex</span>
-          <span className="sm:hidden">N</span>
+          <Image
+            src={theme === "dark" ? "/logo-dark.svg" : "/logo-light.svg"}
+            alt="Neonex"
+            width={160}
+            height={36}
+            priority
+            className="hidden sm:block h-8 w-auto"
+          />
+          <Image
+            src={theme === "dark" ? "/logo-dark.svg" : "/logo-light.svg"}
+            alt="Neonex"
+            width={36}
+            height={36}
+            priority
+            className="block sm:hidden h-8 w-8 rounded-lg"
+          />
         </a>
 
         <div className="flex items-center gap-3">

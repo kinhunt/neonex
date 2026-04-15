@@ -6,6 +6,11 @@ import { NavBar } from "@/components/NavBar";
 export const metadata: Metadata = {
   title: "Neonex — Strategy Market",
   description: "The Strategy Layer for Agentic Trading",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
