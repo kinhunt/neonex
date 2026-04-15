@@ -41,10 +41,10 @@ router.post('/challenge', (req: Request, res: Response) => {
     const expiresAt = new Date(now.getTime() + 10 * 60 * 1000); // 10 分钟过期
 
     const siweMessage = new SiweMessage({
-      domain: domain || 'layer1.blacksquirrel.xyz',
+      domain: domain || 'neonex.run',
       address: checksumAddress,
-      statement: 'Sign in to Black Squirrel Strategy Market',
-      uri: uri || 'https://layer1.blacksquirrel.xyz',
+      statement: 'Sign in to Neonex Strategy Market',
+      uri: uri || 'https://neonex.run',
       version: '1',
       chainId: chainId || 196, // XLayer mainnet
       nonce,

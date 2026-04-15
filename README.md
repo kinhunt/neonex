@@ -1,4 +1,4 @@
-# Black Squirrel Strategy Market
+# Neonex Strategy Market
 
 A full-stack Web3 quantitative-trading strategy platform. Users authenticate with an Ethereum wallet (Sign-In with Ethereum), create or fork trading strategies written in Python, backtest them against crypto OHLCV data, run grid-search parameter optimisation, and publish results to a shared marketplace.
 
@@ -53,7 +53,7 @@ Environment variables (defaults work for local dev; see `backend/.env.example`):
 |---|---|---|
 | `PORT` | `3100` | HTTP listen port |
 | `DB_PATH` | `./data/strategies.db` | SQLite database path |
-| `JWT_SECRET` | `blacksquirrel-dev-secret` | JWT signing key |
+| `JWT_SECRET` | `neonex-dev-secret` | JWT signing key |
 | `PYTHON_ENGINE_URL` | `http://localhost:3200` | Engine service URL |
 | `AI_MODEL` | `claude-sonnet-4-20250514` | Model name used by the AI endpoints |
 | `OPENAI_BASE_URL` | `https://cliproxy.exe.xyz/v1` | OpenAI-compatible proxy base URL |

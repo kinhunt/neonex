@@ -121,7 +121,7 @@ export default function HomePage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       <div className="text-center">
-        <h1 className="text-4xl sm:text-5xl font-bold mb-3">🐿️ Black Squirrel</h1>
+        <h1 className="text-4xl sm:text-5xl font-bold mb-3">Neonex</h1>
         <p className="text-bs-muted text-lg">The Strategy Layer for Agentic Trading on XLayer</p>
       </div>
 

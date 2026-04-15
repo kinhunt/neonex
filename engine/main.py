@@ -14,7 +14,7 @@ from optimizer import run_optimization, _count_combinations, MAX_COMBINATIONS
 from scanner import run_scan
 
 app = FastAPI(
-    title="Black Squirrel Strategy Engine",
+    title="Neonex Strategy Engine",
     description="Python 策略回测引擎 - Layer 1 Strategy Market",
     version="0.1.0",
 )

@@ -4,7 +4,7 @@ import { AuthProvider } from "@/lib/auth-context";
 import { NavBar } from "@/components/NavBar";
 
 export const metadata: Metadata = {
-  title: "🐿️ Black Squirrel — Strategy Market",
+  title: "Neonex — Strategy Market",
   description: "The Strategy Layer for Agentic Trading",
 };
 

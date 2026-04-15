@@ -6,7 +6,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import db from '../db';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'blacksquirrel-dev-secret';
+const JWT_SECRET = process.env.JWT_SECRET || 'neonex-dev-secret';
 
 export interface AuthUser {
   id: string;

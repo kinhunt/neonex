@@ -43,8 +43,8 @@ export function NavBar() {
           href="/"
           className="flex items-center gap-2 text-lg font-bold hover:text-bs-green transition-colors"
         >
-          <span className="hidden sm:inline">🐿️ Black Squirrel</span>
-          <span className="sm:hidden">🐿️</span>
+          <span className="hidden sm:inline">Neonex</span>
+          <span className="sm:hidden">N</span>
         </a>
 
         <div className="flex items-center gap-3">

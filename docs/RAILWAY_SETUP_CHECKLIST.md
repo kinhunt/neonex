@@ -1,10 +1,10 @@
 # Railway Setup Checklist
 
-Use this checklist to recreate the `black-squirrel` project on Railway from the exported GitHub repository.
+Use this checklist to recreate the `neonex` project on Railway from the exported GitHub repository.
 
 Repository:
 
-- `https://github.com/kinhunt/black-squirrel`
+- `https://github.com/kinhunt/neonex`
 
 ## Recommended Service Layout
 
