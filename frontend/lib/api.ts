@@ -289,6 +289,13 @@ export async function fetchStrategy(id: string): Promise<Strategy> {
   return data.strategy || data;
 }
 
+export async function fetchStrategyForks(id: string): Promise<Strategy[]> {
+  const res = await fetch(`${API_BASE}/api/strategies/${id}/forks`);
+  if (!res.ok) throw new Error("Failed to fetch strategy forks");
+  const data = await res.json();
+  return Array.isArray(data) ? data : data.forks || [];
+}
+
 export async function fetchBacktest(id: string): Promise<BacktestResult | null> {
   const res = await fetch(`${API_BASE}/api/strategies/${id}/backtest`);
   if (!res.ok) return null;

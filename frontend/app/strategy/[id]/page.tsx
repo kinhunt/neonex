@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import {
   fetchStrategy,
+  fetchStrategyForks,
   fetchBacktest,
   runBacktest,
   forkStrategy,
@@ -49,6 +50,8 @@ export default function StrategyDetailPage() {
   const id = params.id as string;
 
   const [strategy, setStrategy] = useState<Strategy | null>(null);
+  const [parentStrategy, setParentStrategy] = useState<Strategy | null>(null);
+  const [forks, setForks] = useState<Strategy[]>([]);
   const [backtest, setBacktest] = useState<BacktestResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -62,16 +65,27 @@ export default function StrategyDetailPage() {
   const [forking, setForking] = useState(false);
 
   useEffect(() => {
-    Promise.all([fetchStrategy(id), fetchBacktest(id), fetchSymbols()])
-      .then(([s, b, symData]) => {
+    Promise.all([fetchStrategy(id), fetchBacktest(id), fetchSymbols(), fetchStrategyForks(id)])
+      .then(async ([s, b, symData, forkData]) => {
         setStrategy(s);
+        setForks(forkData || []);
         setBacktest(b);
         setSymbols(symData.symbols || []);
         setTimeframes(symData.timeframes || ["1h", "4h", "1d"]);
-        // Set default symbol/timeframe from best config or fallback
         const best = getBestConfig(s);
         setSymbol(best?.symbol || symData.defaultSymbol || "WOKB/USDT");
         setTimeframe(best?.timeframe || symData.defaultTimeframe || "1h");
+
+        if (s.forkFromId) {
+          try {
+            const parent = await fetchStrategy(s.forkFromId);
+            setParentStrategy(parent);
+          } catch {
+            setParentStrategy(null);
+          }
+        } else {
+          setParentStrategy(null);
+        }
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -200,6 +214,51 @@ export default function StrategyDetailPage() {
           </button>
         </div>
       </div>
+
+      {(parentStrategy || forks.length > 0) && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {parentStrategy && (
+            <button
+              onClick={() => router.push(`/strategy/${parentStrategy.id}`)}
+              className="text-left bg-bs-card border border-bs-border rounded-xl p-4 hover:border-bs-purple/50 hover:bg-bs-card-hover transition-colors"
+            >
+              <div className="text-xs text-bs-muted mb-2">Forked from</div>
+              <div className="font-semibold text-base mb-1">{parentStrategy.name}</div>
+              <div className="text-sm text-bs-muted line-clamp-2">{parentStrategy.description || "Original parent strategy"}</div>
+            </button>
+          )}
+
+          {forks.length > 0 && (
+            <div className="bg-bs-card border border-bs-border rounded-xl p-4">
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <div>
+                  <div className="text-xs text-bs-muted">Fork lineage</div>
+                  <div className="font-semibold">Derived strategies ({forks.length})</div>
+                </div>
+              </div>
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {forks.slice(0, 6).map((fork) => (
+                  <button
+                    key={fork.id}
+                    onClick={() => router.push(`/strategy/${fork.id}`)}
+                    className="w-full text-left px-3 py-2 rounded-lg bg-bs-input hover:bg-bs-card-hover transition-colors"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="text-sm font-medium truncate">{fork.name}</div>
+                        <div className="text-xs text-bs-muted truncate">by {getAuthorName(fork)}</div>
+                      </div>
+                      <div className="text-[10px] text-bs-muted whitespace-nowrap">
+                        {new Date(fork.createdAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Tab Navigation */}
       <div className="border-b border-bs-border">
