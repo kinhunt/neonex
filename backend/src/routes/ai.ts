@@ -5,6 +5,7 @@ const router = Router();
 
 const PYTHON_ENGINE_URL = process.env.PYTHON_ENGINE_URL || 'http://localhost:3200';
 const AI_MODEL = process.env.AI_MODEL || 'claude-sonnet-4-20250514';
+const EXPLAIN_MODEL = process.env.EXPLAIN_MODEL || 'claw-code-pro';
 
 const openai = new OpenAI({
   baseURL: process.env.OPENAI_BASE_URL || 'https://cliproxy.exe.xyz/v1',
@@ -206,23 +207,39 @@ router.post('/explain-strategy', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'code is required' });
     }
 
-    const completion = await openai.chat.completions.create({
-      model: AI_MODEL,
-      messages: [
-        {
-          role: 'system',
-          content: 'You are an expert quantitative analyst. Explain trading strategies clearly in Chinese (中文). Cover: 1) 策略类型 2) 核心逻辑 3) 使用的指标 4) 买卖信号 5) 可调参数及其影响 6) 适用行情 7) 潜在风险',
-        },
-        {
-          role: 'user',
-          content: `请解释以下交易策略的逻辑：\n\n\`\`\`python\n${code}\n\`\`\``,
-        },
-      ],
+    const messages = [
+      {
+        role: 'system' as const,
+        content: 'You are an expert quantitative analyst. Explain trading strategies clearly in Chinese (中文). Cover: 1) 策略类型 2) 核心逻辑 3) 使用的指标 4) 买卖信号 5) 可调参数及其影响 6) 适用行情 7) 潜在风险',
+      },
+      {
+        role: 'user' as const,
+        content: `请解释以下交易策略的逻辑：\n\n\`\`\`python\n${code}\n\`\`\``,
+      },
+    ];
+
+    let completion = await openai.chat.completions.create({
+      model: EXPLAIN_MODEL,
+      messages,
       temperature: 0.2,
       max_tokens: 1200,
     });
 
-    const explanation = completion.choices[0]?.message?.content || '';
+    let explanation = completion.choices[0]?.message?.content || '';
+
+    if (!explanation?.trim() && AI_MODEL !== EXPLAIN_MODEL) {
+      completion = await openai.chat.completions.create({
+        model: AI_MODEL,
+        messages,
+        temperature: 0.2,
+        max_tokens: 1200,
+      });
+      explanation = completion.choices[0]?.message?.content || '';
+    }
+
+    if (!explanation?.trim()) {
+      return res.status(502).json({ error: 'AI provider returned an empty explanation' });
+    }
 
     res.json({ explanation });
   } catch (err: any) {
