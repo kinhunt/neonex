@@ -365,7 +365,7 @@ function MarketStatCard({
   value: string;
   tone?: "green" | "purple";
 }) {
-  const color = tone === "green" ? "text-bs-green" : tone === "purple" ? "text-bs-purple" : "text-white";
+  const color = tone === "green" ? "text-bs-green" : tone === "purple" ? "text-bs-purple" : "text-foreground";
   return (
     <div className="bg-bs-card border border-bs-border rounded-xl p-4">
       <p className="text-bs-muted text-xs mb-1">{label}</p>
