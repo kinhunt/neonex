@@ -100,7 +100,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })) as string;
 
     // Verify
-    const result = await verifySignature(walletAddress, signature, nonce);
+    const result = await verifySignature(message, signature);
 
     // Save
     setToken(result.token);

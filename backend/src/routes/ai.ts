@@ -227,7 +227,10 @@ router.post('/explain-strategy', async (req: Request, res: Response) => {
     res.json({ explanation });
   } catch (err: any) {
     console.error('POST /api/ai/explain-strategy error:', err);
-    res.status(500).json({ error: err.message });
+    const message = err?.status === 401
+      ? 'AI provider authentication failed: backend OPENAI_API_KEY is invalid or missing'
+      : err.message;
+    res.status(err?.status === 401 ? 502 : 500).json({ error: message });
   }
 });
 

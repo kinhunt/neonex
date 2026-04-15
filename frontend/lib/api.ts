@@ -229,17 +229,17 @@ export async function getChallenge(walletAddress: string): Promise<{ nonce: stri
 }
 
 export async function verifySignature(
-  walletAddress: string,
-  signature: string,
-  nonce: string
+  message: string,
+  signature: string
 ): Promise<{ token: string; user: User }> {
   const res = await fetch(`${API_BASE}/api/auth/verify`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ walletAddress, signature, nonce }),
+    body: JSON.stringify({ message, signature }),
   });
-  if (!res.ok) throw new Error("Failed to verify signature");
-  return res.json();
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || "Failed to verify signature");
+  return data;
 }
 
 export async function getMe(): Promise<User> {
@@ -444,8 +444,9 @@ export async function explainStrategy(code: string): Promise<{ explanation: stri
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ code }),
   });
-  if (!res.ok) throw new Error("Failed to explain strategy");
-  return res.json();
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || "Failed to explain strategy");
+  return data;
 }
 
 export async function publishStrategy(strategy: {
