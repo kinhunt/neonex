@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import {
   generateStrategy,
   improveStrategy,
+  explainStrategy,
   runEngineBacktest,
   publishStrategy,
   extractParams,
@@ -51,6 +52,8 @@ export default function CreateStrategyPage() {
   ]);
   const [input, setInput] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
+  const [explanation, setExplanation] = useState("");
+  const [explaining, setExplaining] = useState(false);
 
   // Symbols & Timeframes
   const [symbols, setSymbols] = useState<SymbolInfo[]>([]);
@@ -119,6 +122,7 @@ export default function CreateStrategyPage() {
 
       if (result.code) {
         setCode(result.code);
+        setExplanation("");
         // Auto-extract parameters
         handleExtractParams(result.code);
       }
@@ -152,6 +156,20 @@ export default function CreateStrategyPage() {
       setBacktesting(false);
     }
   }, [code, symbol, timeframe]);
+
+  const handleExplain = useCallback(async () => {
+    if (!code.trim()) return;
+    setExplaining(true);
+    try {
+      const result = await explainStrategy(code);
+      setExplanation(result.explanation || "");
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Explain failed";
+      alert(msg);
+    } finally {
+      setExplaining(false);
+    }
+  }, [code]);
 
   const handlePublish = useCallback(async () => {
     if (!publishName.trim()) return;
@@ -189,6 +207,7 @@ export default function CreateStrategyPage() {
       newCode = newCode.replace(regex, `$1${val}`);
     });
     setCode(newCode);
+    setExplanation("");
     setShowOptimizer(false);
   }, [code]);
 
@@ -376,6 +395,24 @@ export default function CreateStrategyPage() {
             </div>
           )}
 
+          {/* Strategy Explanation */}
+          {explanation && !showOptimizer && (
+            <div className="border-t border-bs-border bg-bs-card px-4 py-4 max-h-[35vh] overflow-y-auto">
+              <div className="flex items-center justify-between gap-3 mb-2">
+                <h3 className="text-sm font-semibold">🧠 Strategy Explanation</h3>
+                <button
+                  onClick={() => setExplanation("")}
+                  className="text-xs text-bs-muted hover:text-white transition-colors"
+                >
+                  Hide
+                </button>
+              </div>
+              <div className="text-sm text-bs-muted whitespace-pre-wrap leading-6">
+                {explanation}
+              </div>
+            </div>
+          )}
+
           {/* Toolbar */}
           <div className="border-t border-bs-border bg-bs-card px-4 py-2.5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 shrink-0">
             <div className="flex items-center gap-2 flex-wrap">
@@ -423,6 +460,13 @@ export default function CreateStrategyPage() {
                 }`}
               >
                 🔬 Optimize
+              </button>
+              <button
+                onClick={handleExplain}
+                disabled={explaining || !code.trim()}
+                className="px-4 py-1.5 border border-bs-border text-sm font-semibold rounded-lg text-bs-muted hover:border-bs-purple hover:text-bs-purple transition-colors disabled:opacity-50"
+              >
+                {explaining ? "Explaining..." : "🧠 Explain"}
               </button>
             </div>
             <button

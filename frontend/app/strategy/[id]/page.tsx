@@ -9,6 +9,7 @@ import {
   runBacktest,
   forkStrategy,
   fetchSymbols,
+  explainStrategy,
   Strategy,
   BacktestResult,
   Configuration,
@@ -583,17 +584,43 @@ function CodeTab({
   code: string;
   strategy: Strategy;
 }) {
+  const [explanation, setExplanation] = useState("");
+  const [explaining, setExplaining] = useState(false);
+
+  const handleExplain = useCallback(async () => {
+    if (!code.trim()) return;
+    setExplaining(true);
+    try {
+      const result = await explainStrategy(code);
+      setExplanation(result.explanation || "");
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Explain failed";
+      alert(msg);
+    } finally {
+      setExplaining(false);
+    }
+  }, [code]);
+
   return (
     <div className="space-y-6">
       {/* Code View */}
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold">Strategy Code</h3>
-          {strategy.currentVersion && (
-            <span className="text-xs text-bs-muted px-2 py-0.5 bg-bs-border rounded">
-              {strategy.currentVersion.version}
-            </span>
-          )}
+        <div className="flex items-center justify-between mb-3 gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <h3 className="text-lg font-semibold">Strategy Code</h3>
+            {strategy.currentVersion && (
+              <span className="text-xs text-bs-muted px-2 py-0.5 bg-bs-border rounded">
+                {strategy.currentVersion.version}
+              </span>
+            )}
+          </div>
+          <button
+            onClick={handleExplain}
+            disabled={explaining || !code.trim()}
+            className="px-3 py-1.5 border border-bs-border text-sm font-semibold rounded-lg text-bs-muted hover:border-bs-purple hover:text-bs-purple transition-colors disabled:opacity-50"
+          >
+            {explaining ? "Explaining..." : "🧠 Explain Strategy"}
+          </button>
         </div>
         {/* Mobile: pre block */}
         <div className="block md:hidden">
@@ -621,6 +648,23 @@ function CodeTab({
           />
         </div>
       </div>
+
+      {explanation && (
+        <div className="bg-bs-card border border-bs-border rounded-xl p-4">
+          <div className="flex items-center justify-between gap-3 mb-2">
+            <h3 className="text-lg font-semibold">🧠 Strategy Explanation</h3>
+            <button
+              onClick={() => setExplanation("")}
+              className="text-xs text-bs-muted hover:text-white transition-colors"
+            >
+              Hide
+            </button>
+          </div>
+          <div className="text-sm text-bs-muted whitespace-pre-wrap leading-6">
+            {explanation}
+          </div>
+        </div>
+      )}
 
       {/* Version History */}
       {strategy.versions && strategy.versions.length > 0 && (

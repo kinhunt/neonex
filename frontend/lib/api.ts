@@ -431,6 +431,16 @@ export async function improveStrategy(
   return res.json();
 }
 
+export async function explainStrategy(code: string): Promise<{ explanation: string }> {
+  const res = await fetch(`${API_BASE}/api/ai/explain-strategy`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code }),
+  });
+  if (!res.ok) throw new Error("Failed to explain strategy");
+  return res.json();
+}
+
 export async function publishStrategy(strategy: {
   name: string;
   description: string;
